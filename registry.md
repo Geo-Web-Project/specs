@@ -69,7 +69,7 @@ function contentIdentifier(uint256 geohash) external view returns (bytes memory)
 A Geohash may be claimed by a new owner through some authoritative account owned and ran by the developers of the registry. Content can be attached to land at the time of claiming.
 
 ```
-function claim(uint256 geohash, address owner, string cid) onlyAdmin external;
+function claim(uint256 geohash, address owner, bytes cid) onlyAdmin external;
 ```
 
 Land that is already owned cannot be claimed by others.
