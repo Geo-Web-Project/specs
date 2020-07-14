@@ -22,21 +22,7 @@ The initial version of this specification is focused on delivering a working pro
 
 At the core of the registry is how land is defined. This subtle, yet important, aspect of the registry is what the entire Geo Web depends upon. Improper or arbitrary definitions of land may result in ownership conflicts and inhibit the adoption of the Geo Web.
 
-### Background
-
-Defining physical land in a digital world is not a new concept or problem. Inspiration is taken from existing, open mechanisms from the GIS community. They are compared with each other and the requirements of the Geo Web in this [research document](TODO).
-
-#### Geohash
-
-[Geohash](https://en.wikipedia.org/wiki/Geohash) is a geocode system that encodes a geographic location in a short, base32 string of characters. It has important properties that are believed to be suitable for efficient storage of land and lookup of ownership.
-
----
-
-Land is defined as a single Geohash. A Geohash represents some rectangular area of land anywhere on Earth. The size of this area varies depending on the length of the Geohash.
-
-In this iteration, each Geohash is considered a separate piece of land no matter the length. However, note that this results in conflicts of ownership as the owner of a large area of land may be different than an owner of a smaller area of land within it. Future iterations will deal with these conflicts by not allowing longer prefixed Geohashes from being owned by someone else.
-
-A Geohash can be converted from a base32 string and stored as an unsigned integer. Note that the base32 encoding of Geohash may not be the same as other commonly known base32 encodings.
+See the [Land Representation Spec](land-representation.md) for more details on how land is defined.
 
 ## Get Owner
 
