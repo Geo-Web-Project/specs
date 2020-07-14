@@ -45,10 +45,10 @@ Another approach is to define a polygon with a set of coordinates:
 All these approaches look similar when comparing to our requirements:
 
 - [x] No central party
-- [] Verifiable non-overlapping
+- [ ] Verifiable non-overlapping
   - Circular regions cannot define a complete set of land on Earth without overlaps
   - Determining if rectangular regions overlaps requires some error-prone, inefficient math that scales with the number of parcels
-- [] Fast lookups
+- [ ] Fast lookups
   - No clear method for lookups that does not scale with number of parcels
 
 ### Open Location Codes (Plus Codes)
