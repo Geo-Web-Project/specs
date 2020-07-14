@@ -103,6 +103,17 @@ A Geohash can be converted from a base32 string and stored as an unsigned intege
 uint256 geohash
 ```
 
+## Roadmap
+
+- Complex land shapes
+  - Supported by owning multiple, precise geohashes
+- No nested ownership
+  - In the current spec, someone can own a Geohash that is contained inside of another. For example, a different entity can own `gbsuv` than the entity who owns the more precise `gbsuvs`
+- Support lookups of multiple precision
+  - A client looking up the owner of a Geohash is the current spec must be using the same amount of precision that was used when the land was claimed. A client should be able to specific a more precise Geohash, and find the owner of a less precise Geohash that contains it
+- NFT representation
+  - Can a Geohash be an NFT?
+
 ---
 
 <a name="f1">1</a>: WGS84, https://en.wikipedia.org/wiki/World_Geodetic_System
