@@ -15,8 +15,8 @@ The owner controls what digital content corresponds to their land at the time of
 The initial version of this specification is focused on delivering a working prototype for the [HackFS](https://hackfs.com) hackathon. The minimum requirements are:
 
 - Define a mechanism for representing land
-- Land can be purchased for the first time by an entity
-- Digital content can be attached to land at the time of purchasing
+- Land can be claimed by an entity
+- Digital content can be attached to land when claimed
 
 ## Land
 
@@ -58,13 +58,15 @@ The specification does not define the schema or data formats of content.
 function content(uint256 geohash) external view returns (string);
 ```
 
-## Set Owner
+## Claim Land
 
-The owner of a piece of land must only be editable by some authoritative account owned and ran by the developers of the registry.
+A Geohash may be claimed by a new owner through some authoritative account owned and ran by the developers of the registry. Content can be attached to land at the time of claiming.
 
 ```
-function setOwner(uint256 geohash, address owner) onlyAdmin external;
+function claim(uint256 geohash, address owner, string cid) onlyAdmin external;
 ```
+
+Land that is already owned cannot be claimed by others.
 
 ## Roadmap
 
