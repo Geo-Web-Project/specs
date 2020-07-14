@@ -52,10 +52,16 @@ function owner(uint256 geohash) external view returns (address);
 
 For each parcel of land that is purchased, the registry stores an [IPLD CID](https://github.com/ipld/specs/blob/master/block-layer/CID.md) as a reference to some piece of digital content. This provides a simple mechanism for content from the registry to be fetched from a variety of IPLD sources such as IPFS or Filecoin.
 
+A CID is stored as a byte array of the following format:
+
+```
+<cid-version><multicodec-content-type><multihash-content-address>
+```
+
 The specification does not define the schema or data formats of content.
 
 ```
-function content(uint256 geohash) external view returns (string);
+function contentIdentifier(uint256 geohash) external view returns (bytes memory);
 ```
 
 ## Claim Land
