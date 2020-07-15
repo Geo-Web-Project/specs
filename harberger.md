@@ -29,19 +29,21 @@ function owner(uint256 geohash) external view returns (address owner);
 
 ## Get Value
 
-Each parcel of land that has an owner has a owner-assessed value. The value is represented in Eth and is used as the basis for tax caluclations and land transfers.
+Each parcel of land that has an owner has a owner-assessed value. The value is represented in wei and is used as the basis for tax caluclations and land transfers.
 
 ```
-function value(uint256 geohash) external view returns (float value);
+function value(uint256 geohash) external view returns (uinit256 value);
 ```
 
 ## Purchase Land
 
-A land parcel may be purchased by any Ethereum account by paying the owner-assessed value to the current owner. Eth is transferred from the purchaser's wallet to the seller's wallet and the new owner sets a new owner-assessed value. Land parcels without a current owner may be purchased with no initial payment.
+A land parcel may be purchased by any Ethereum account by paying the owner-assessed value to the current owner. Eth is transferred from the purchaser's wallet to the seller's wallet and the new owner sets a new owner-assessed value. Land parcels without a current owner may be purchased with no initial payment. 
 
 ```
 function purchase(uint256 geohash, address owner, float value);
 ```
+
+Add ability for a new land owner to stake 10% of new owner-assessed value at time of purchase to be drawn down in tax payments. The previous owner's stake should be returned at time of transfer.
 
 ## Collect Tax
 
@@ -52,7 +54,7 @@ On a nightly basis, calculate and collect tax payments for claimed land parcels 
 - Allow owners to update self-assessed values of land parcels (without purchased land from themselves)
 - Integrate with Geo Web Registry
 - Enhanced tax collection and calculation (monthly tax collection; mid-period changes in owner-assessed values and transfers)
-- Add mechanisms and flow for resolving non-payment of taxes/insuficient funds
+- Add mechanisms and flow for resolving non-payment of taxes/insuficient funds and re-staking
 - Auctions for unclaimed land
 - Enhanced forms of identity
 - Allow owner-assessed values in dollars (payment still in Eth)
