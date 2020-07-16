@@ -13,9 +13,9 @@ It maintains an owner-assessed value for parcels of land from the registry and c
 
 The initial version of this specification is focused on demonstrating the basic functions of the Harberger system, but in isolation from the Geo Web Registry. The minimum requirements are:
 
--Maintain a set list of digital land parcels (geohashes) along with their respective owners (Ethereum address) and owner-assessed values (price in Eth)
--Allow an entity (Ethereum address) to "purchase" a land parcel for the current self-assessed value (if zero or null then no payment transfer is required) and set a new one
--Collect a periodic tax payments from owners based on their self-assessed land values in batch and send them to an admin address
+- Maintain a set list of digital land parcels (geohashes) along with their respective owners (Ethereum address) and owner-assessed values (price in Eth)
+- Allow an entity (Ethereum address) to "purchase" a land parcel for the current self-assessed value (if zero or null then no payment transfer is required) and set a new one
+- Collect a periodic tax payments from owners based on their self-assessed land values in batch and send them to an admin address
 
 ## Get Owner
 
