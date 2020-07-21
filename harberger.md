@@ -40,7 +40,7 @@ function value(uint256 geohash) external view returns (uinit256 value);
 A land parcel may be purchased by any Ethereum account by paying the owner-assessed value to the current owner. Eth is transferred from the purchaser's wallet to the seller's wallet and the new owner sets a new owner-assessed value. Land parcels without a current owner may be purchased with no initial payment. 
 
 ```
-function purchase(uint256 geohash, address owner, float value);
+function purchase(uint256 geohash, address owner, uint256 value);
 ```
 
 Add ability for a new land owner to stake 10% of new owner-assessed value at time of purchase to be drawn down in tax payments. The previous owner's stake should be returned at time of transfer.
