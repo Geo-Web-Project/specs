@@ -89,30 +89,48 @@ Geohash also satisfies our requirements:
 - [x] Fast lookups
   - More-precise areas can be determined to be contained in a less-precise area in constant time
 
-In addition, the base32 encoding of Geohash enables simpler and more efficient storage on Ethereum. The bitwise logic needed to compare areas is also simpler than base20 since no padding is needed.
+In addition, the base32 encoding of a geohash enables simpler and more efficient storage on Ethereum. The bitwise logic needed to compare areas is also simpler than base20 since no padding is needed.
 
 ## Definition
 
-Land is defined as a single Geohash. A Geohash represents some rectangular area of land anywhere on Earth. The size of this area varies depending on the length of the Geohash.
+Land is defined as a set of fixed-size geohashes. A geohash represents some rectangular area of land anywhere on Earth. The size of this area varies depending on the length of the geohash and where on Earth it is located.
 
-In this iteration, each Geohash is considered a separate piece of land no matter the length. However, note that this results in conflicts of ownership as the owner of a large area of land may be different than an owner of a smaller area of land within it. Future iterations will deal with these conflicts by not allowing longer prefixed Geohashes from being owned by someone else.
+All geohashes that make up land parcels will have a fixed size of 10 digits. This is roughly a square meter area when near the equator and should allow for complex enough areas to be defined. Using a fixed size allows for simple lookup and storage of land owners.
 
-A Geohash can be converted from a base32 string and stored as an unsigned integer. Note that the base32 encoding of Geohash may not be the same as other commonly known base32 encodings.
+### Geohash Type
+
+A geohash can be converted from a base32 string and stored as an unsigned integer. Note that the base32 encoding of a geohash may not be the same as other commonly known base32 encodings.
 
 ```
 uint256 geohash
 ```
 
-## Roadmap
+### Land Structure
 
-- Complex land shapes
-  - Supported by owning multiple, precise geohashes
-- No nested ownership
-  - In the current spec, someone can own a Geohash that is contained inside of another. For example, a different entity can own `gbsuv` than the entity who owns the more precise `gbsuvs`
-- Support lookups of multiple precision
-  - A client looking up the owner of a Geohash is the current spec must be using the same amount of precision that was used when the land was claimed. A client should be able to specific a more precise Geohash, and find the owner of a less precise Geohash that contains it
-- NFT representation
-  - Can a Geohash be an NFT?
+```
+struct LandParcel {
+  EnumerableSet.UintSet geohashes
+  ...more to come
+}
+
+// Parcel ID -> LandParcel
+mapping (uint256 => LandParcel) landParcels;
+```
+
+### Ownership Structure
+
+A smart contract stores mappings of which parcel a geohash belongs, the owner of each parcel, and a set of land parcels owned by each land owner.
+
+```
+// Geohash -> Parcel ID
+mapping (uint256 => uint256) private geohashIndex;
+
+// Parcel ID -> Land Owner
+EnumerableMap.UintToAddressMap private parcelOwners;
+
+// Land Owner -> Set of owned parcels
+mapping (address => EnumerableSet.UintSet) private holderParcels;
+```
 
 ---
 
