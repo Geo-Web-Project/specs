@@ -1,14 +1,11 @@
-# Land Representation v0.1
+# LandParcelManager
 
-This specification defines the answer to the question:
-
-> How is a piece of physical land defined and represented in the Geo Web?
+The `LandParcelManager` contract is responsible for organizing land into parcels. Each parcel is simply a set of contiguous geohashes. No two parcels share any overlapping land.
 
 ## Requirements
 
-- Identifying parcels of land must not depend on a central party or service
-- It must be verifiable that no two parcels of land shall overlap
-- Determining who owns the land containing a specific point must be a constant-time operation
+- A parcel must represent a contiguous set of land
+- No two parcels may overlap
 
 ## Background
 
@@ -110,26 +107,43 @@ uint256 geohash
 ```
 struct LandParcel {
   EnumerableSet.UintSet geohashes
-  ...more to come
 }
 
 // Parcel ID -> LandParcel
 mapping (uint256 => LandParcel) landParcels;
 ```
 
-### Ownership Structure
+### Land Parcel Index
 
-A smart contract stores mappings of which parcel a geohash belongs, the owner of each parcel, and a set of land parcels owned by each land owner.
+The smart contract stores a mapping of which parcel a geohash belongs to for efficient lookups.
 
 ```
 // Geohash -> Parcel ID
 mapping (uint256 => uint256) private geohashIndex;
+```
 
-// Parcel ID -> Land Owner
-EnumerableMap.UintToAddressMap private parcelOwners;
+### Minting Land
 
-// Land Owner -> Set of owned parcels
-mapping (address => EnumerableSet.UintSet) private holderParcels;
+Some external account is given authority to mint land. This account is the [GeoWebAdmin](./GeoWebAdmin.md) contract.
+
+Minting requires on input:
+- A single, base geohash
+- A path, starting at the base geohash, representing bordering geohashes
+
+A path is an array of directions:
+```
+enum Direction { North, South, East, West }
+```
+
+Starting from the base geohash this path is followed, with each geohash along the way:
+
+- If belongs to existing parcel, burn parcel
+- Add to parcel being minted
+
+This is a concise way of ensuring a land parcel is contiguous and never overlaps with other parcels. It is up to the minter ([GeoWebAdmin](./GeoWebAdmin.md)) to enforce additional authorization around when minting can occur. For example, nobody should be able to mint land with geohashes belonging to other parcels that are not expired or in auction.
+
+```
+function mintLandParcel(uint256 baseGeohash, Direction[] memory path) external onlyMinter;
 ```
 
 ---
