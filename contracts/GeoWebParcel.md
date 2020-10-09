@@ -1,6 +1,6 @@
-# LandParcelManager
+# GeoWebParcel
 
-The `LandParcelManager` contract is responsible for organizing land into parcels. Each parcel is simply a set of contiguous geohashes. No two parcels share any overlapping land.
+The `GeoWebParcel` contract is responsible for organizing land into parcels. Each parcel is simply a set of contiguous geohashes. No two parcels share any overlapping land.
 
 ## Requirements
 
@@ -86,66 +86,88 @@ Geohash also satisfies our requirements:
 - [x] Fast lookups
   - More-precise areas can be determined to be contained in a less-precise area in constant time
 
-In addition, the base32 encoding of a geohash enables simpler and more efficient storage on Ethereum. The bitwise logic needed to compare areas is also simpler than base20 since no padding is needed.
-
 ## Definition
 
 Land is defined as a set of fixed-size geohashes. A geohash represents some rectangular area of land anywhere on Earth. The size of this area varies depending on the length of the geohash and where on Earth it is located.
 
-All geohashes that make up land parcels will have a fixed size of 10 digits. This is roughly a square meter area when near the equator and should allow for complex enough areas to be defined. Using a fixed size allows for simple lookup and storage of land owners.
+All geohashes that make up land parcels will have a fixed size of 9 digits. This is roughly a few square meters area when near the equator and should allow for complex enough areas to be defined. Using a fixed size allows for simple lookup and storage of land owners.
 
 ### Geohash Type
 
 A geohash can be converted from a base32 string and stored as an unsigned integer. Note that the base32 encoding of a geohash may not be the same as other commonly known base32 encodings.
 
 ```
-uint256 geohash
+uint256 geohash;
 ```
 
-### Land Structure
+### Land Parcel Structure
+
+A parcel is represented with a single, base geohash along with a path. The path is a series of directions (north, south, east, or west) to take starting at the base. This representation is an efficient way to store a land parcel that is always contiguous. Non-contiguous parcels cannot be represented if a path must be given.
 
 ```
 struct LandParcel {
-  EnumerableSet.UintSet geohashes
+  uint256 baseGeohash;
+  uint256[] path;
 }
 
 // Parcel ID -> LandParcel
 mapping (uint256 => LandParcel) landParcels;
 ```
 
-### Land Parcel Index
-
-The smart contract stores a mapping of which parcel a geohash belongs to for efficient lookups.
-
+Each direction of a path is represented as two bits:
 ```
-// Geohash -> Parcel ID
-mapping (uint256 => uint256) private geohashIndex;
-```
-
-### Minting Land
-
-Some external account is given authority to mint land. This account is the [GeoWebAdmin](./GeoWebAdmin.md) contract.
-
-Minting requires on input:
-- A single, base geohash
-- A path, starting at the base geohash, representing bordering geohashes
-
-A path is an array of directions:
-```
-enum Direction { North, South, East, West }
+00 -> North
+01 -> South
+10 -> East
+11 -> West
 ```
 
-Starting from the base geohash this path is followed, with each geohash along the way:
+A single path element of length 256 bits can represent up to 64 paths while only needing a single `SSTORE` EVM operation.
 
-- If belongs to existing parcel, burn parcel
-- Add to parcel being minted
+A parcel made up of 65 geohashes can be stored using just two storage slots and two `SSTORE` operations. With a precision of 9 digits, 65 geohashes make up approximately 325 square meters.
+
+### Geohash Availability Index
+
+The smart contract stores an index about which geohashes belong to existing parcels. This is used to ensure no parcels being minted overlap with existing parcels.
+
+At a minimum, the contract only needs to store a single bit for each geohash, where `0` means the geohash is available an `1` means it is not available. 
+
+In order to efficiently pack these bits, the availability of 256 geohashes is packed into a single slot. With a precision of 9 digits, a geohash makes up 45 bits. The 37 most significant bits are used as the key, while the 8 least significant bits are used as the index into the `uint256` value.
+
+```
+mapping (uint256 => uint256) geohashAvailabilityIndex;
+```
+
+### Minting a Parcel
+
+Some external account is given authority to mint parcels. This account is the [GeoWebAdmin](./GeoWebAdmin.md) contract.
+
+Minting requires on input a `LandParcel` struct.
+
+Starting from the base geohash the path is followed, with each geohash along the way:
+
+- If belongs to existing parcel, revert
+- Mark geohash as not available
 
 This is a concise way of ensuring a land parcel is contiguous and never overlaps with other parcels. It is up to the minter ([GeoWebAdmin](./GeoWebAdmin.md)) to enforce additional authorization around when minting can occur. For example, nobody should be able to mint land with geohashes belonging to other parcels that are not expired or in auction.
 
 ```
-function mintLandParcel(uint256 baseGeohash, Direction[] memory path) external onlyMinter;
+function mintLandParcel(LandParcel memory parcel) external onlyMinter;
 ```
 
+### Burning a Parcel
+
+Some external account is given authority to burn parcels. This account is the [GeoWebAdmin](./GeoWebAdmin.md) contract.
+
+Burning requires on input a `LandParcel` struct.
+
+Starting from the base geohash the path is followed, with each geohash along the way:
+
+- Mark geohash as available
+
+```
+function burnLandParcel(LandParcel memory parcel) external onlyBurner;
+```
 ---
 
 <a name="f1">1</a>: WGS84, https://en.wikipedia.org/wiki/World_Geodetic_System
