@@ -1,6 +1,6 @@
-# LandParcelManager
+# GeoWebParcel
 
-The `LandParcelManager` contract is responsible for organizing land into parcels. Each parcel is simply a set of contiguous geohashes. No two parcels share any overlapping land.
+The `GeoWebParcel` contract is responsible for organizing land into parcels. Each parcel is simply a set of contiguous `GeoWebCoordinate`. No two parcels share any overlapping land.
 
 ## Requirements
 
@@ -86,66 +86,92 @@ Geohash also satisfies our requirements:
 - [x] Fast lookups
   - More-precise areas can be determined to be contained in a less-precise area in constant time
 
-In addition, the base32 encoding of a geohash enables simpler and more efficient storage on Ethereum. The bitwise logic needed to compare areas is also simpler than base20 since no padding is needed.
-
 ## Definition
 
-Land is defined as a set of fixed-size geohashes. A geohash represents some rectangular area of land anywhere on Earth. The size of this area varies depending on the length of the geohash and where on Earth it is located.
+A land parcel is defined as a set of `GeoWebCoordinate`. A `GeoWebCoordinate` represents some rectangular area of land anywhere on Earth. The size of this area varies depending on where on Earth it is located due to distortion, but it is approximately 10 square meters at the equator.
 
-All geohashes that make up land parcels will have a fixed size of 10 digits. This is roughly a square meter area when near the equator and should allow for complex enough areas to be defined. Using a fixed size allows for simple lookup and storage of land owners.
+### GeoWebCoordinate
 
-### Geohash Type
+Earth is divided into a grid of `GeoWebCoordinate`. This grid is of size 2^24 (longitude) by 2^23 (latitude).
 
-A geohash can be converted from a base32 string and stored as an unsigned integer. Note that the base32 encoding of a geohash may not be the same as other commonly known base32 encodings.
+See converting from GPS to GeoWebCoordinate [TODO].
 
+A `GeoWebCoordinate` is an unsigned 64-bit integer, where the most significant 32 bits are the X coordinate and the least significant 32 bits are the Y coordinate.
 ```
-uint256 geohash
+<32 bits of X><32 bits of Y>
+
+uint64 coordinate;
 ```
 
-### Land Structure
+### Land Parcel Structure
+
+A parcel is represented with a single, base coordinate along with a path. The path is a series of directions (north, south, east, or west) to take starting at the base. This representation is an efficient way to store a land parcel that is always contiguous. Non-contiguous parcels cannot be represented if a path must be given.
 
 ```
 struct LandParcel {
-  EnumerableSet.UintSet geohashes
+  uint64 baseCoordinate;
+  uint256[] path;
 }
 
 // Parcel ID -> LandParcel
-mapping (uint256 => LandParcel) landParcels;
+mapping(uint256 => LandParcel) landParcels;
 ```
 
-### Land Parcel Index
-
-The smart contract stores a mapping of which parcel a geohash belongs to for efficient lookups.
-
+Each direction of a path is represented as two bits:
 ```
-// Geohash -> Parcel ID
-mapping (uint256 => uint256) private geohashIndex;
-```
-
-### Minting Land
-
-Some external account is given authority to mint land. This account is the [GeoWebAdmin](./GeoWebAdmin.md) contract.
-
-Minting requires on input:
-- A single, base geohash
-- A path, starting at the base geohash, representing bordering geohashes
-
-A path is an array of directions:
-```
-enum Direction { North, South, East, West }
+00 -> North
+01 -> South
+10 -> East
+11 -> West
 ```
 
-Starting from the base geohash this path is followed, with each geohash along the way:
+A single path element of length 256 bits can represent up to 64 paths while only needing a single `SSTORE` EVM operation.
 
-- If belongs to existing parcel, burn parcel
-- Add to parcel being minted
+### Coordinate Availability Index
 
-This is a concise way of ensuring a land parcel is contiguous and never overlaps with other parcels. It is up to the minter ([GeoWebAdmin](./GeoWebAdmin.md)) to enforce additional authorization around when minting can occur. For example, nobody should be able to mint land with geohashes belonging to other parcels that are not expired or in auction.
+The smart contract stores an index about which coordinates belong to existing parcels. This is used to ensure no parcels being minted overlap with existing parcels.
+
+At a minimum, the contract only needs to store a single bit for each coordinate, where `0` means the coordinate is available and `1` means it is not available. 
+
+In order to efficiently pack these bits, the availability of 256 coordinates is packed into a single slot or EVM word. These words make up another coordinate system that divides the `GeoWebCoordinate` system into a grid of size (2^24 / 16) by (2^23 / 16). Each word in this grid maps to a nested grid of 16x16 `GeoWebCoordinate` for a total of 256 coordinates in each word.
+
+The local coordinate of a `GeoWebCoordinate` in a 16x16 word is used to calculate an index from 0 to 255. This index represents the bit position in the word that stores the availability of that coordinate.
 
 ```
-function mintLandParcel(uint256 baseGeohash, Direction[] memory path) external onlyMinter;
+((WordCoord_x => (WordCoord_y => Word))
+mapping(uint256 => mapping(uint256 => uint256)) availabilityIndex;
 ```
 
+### Minting a Parcel
+
+Some external account is given authority to mint parcels. This account is the [GeoWebAdmin](./GeoWebAdmin.md) contract.
+
+Minting requires on input a base coordinate and path.
+
+Starting from the base coordinate the path is followed, with each coordinate along the way:
+
+- If belongs to existing parcel, revert
+- Mark coordinate as not available
+
+This is a concise way of ensuring a land parcel is contiguous and never overlaps with other parcels. It is up to the minter ([GeoWebAdmin](./GeoWebAdmin.md)) to enforce additional authorization around when minting can occur. For example, nobody should be able to mint land that is not expired or in auction.
+
+```
+function mintLandParcel(uint64 baseCoordinate, uint256[] calldata path) external onlyMinter;
+```
+
+### Burning a Parcel
+
+Some external account is given authority to burn parcels. This account is the [GeoWebAdmin](./GeoWebAdmin.md) contract.
+
+Burning requires on input a `LandParcel` identifier.
+
+Starting from the base coordinate the path is followed, with each coordinate along the way:
+
+- Mark coordinate as available
+
+```
+function burnLandParcel(uint256 id) external onlyBurner;
+```
 ---
 
 <a name="f1">1</a>: WGS84, https://en.wikipedia.org/wiki/World_Geodetic_System

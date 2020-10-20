@@ -4,7 +4,7 @@ The `ERC721License` contract is responsible for managing the ownership of licens
 
 ## Token Identifiers
 
-Token identifiers must be a parcel ID taken from the [LandParcelManager](./LandParcelManager.md) contract.
+Token identifiers must be a parcel ID taken from the [GeoWebParcel](./GeoWebParcel.md) contract.
 
 ## Minting and Burning
 
