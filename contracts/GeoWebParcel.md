@@ -207,7 +207,7 @@ Lon_GW = floor(Lon_GPS / (360 / 2^24))
 
 The `Lat_GW` and `Lon_GW` can then be combined into a single 64-bit integer.
 ```
-(Lon_GW << 32) & Lat_GW
+(Lon_GW << 32) | Lat_GW
 ```
 
 ### GeoWebCoordinate -> GPS Bounding Box
