@@ -172,6 +172,61 @@ Starting from the base coordinate the path is followed, with each coordinate alo
 ```
 function burnLandParcel(uint256 id) external onlyBurner;
 ```
+
+## Converting Coordinates
+
+In order to interact with or read data from the `GeoWebParcel` smart contract a `GeoWebCoordinate` needs to be converted to and from a GPS coordinate.
+
+### GPS -> GeoWebCoordinate
+
+This conversion is needed to lookup content that is associated with some GPS location.
+
+#### Step 1: Normalize GPS Coordinates
+
+The first step is to normalize a GPS coordinate. Given a GPS coordinate in degrees:
+- Latitude from -90.0 to 90.0
+  - Add 90.0 to get a value between 0.0 and <180.0
+- Longitude from -180.0 to 180.0
+  - Add 180.0 to get a value between 0.0 and <360.0
+
+#### Step 2a: Convert Latitude
+
+The latitude coordinate must be converted from a value between 0 and <180 to 0 and <2^23.
+```
+Lat_GW = floor(Lat_GPS / (180 / 2^23))
+```
+
+#### Step 2b: Convert Longitude
+
+The longitude coordinate must be converted from a value between 0 and <360 to 0 and <2^24.
+```
+Lon_GW = floor(Lon_GPS / (360 / 2^24))
+```
+
+#### Step 3: Combine
+
+The `Lat_GW` and `Lon_GW` can then be combined into a single 64-bit integer.
+```
+(Lon_GW << 32) & Lat_GW
+```
+
+### GeoWebCoordinate -> GPS Bounding Box
+
+Another common use case is converting a `GeoWebCoordinate` to a GPS bounding box.
+```
+Bottom_Left_Lon = (Lon_GW * (180 / 2^24)) - 180
+Bottom_Left_Lat = (Lat_GW * (90 / 2^23)) - 90
+
+Top_Right_Lon = Bottom_Left_Lon + (180 / 2^24)
+Top_Right_Lat = Bottom_Left_Lat + (90 / 2^23)
+
+Bottom_Right_Lon = Top_Right_Lon
+Bottom_Right_Lat = Bottom_Left_Lat
+
+Top_Left_Lon = Bottom_Left_Lon
+Top_Left_Lat = Top_Right_Lat
+```
+
 ---
 
 <a name="f1">1</a>: WGS84, https://en.wikipedia.org/wiki/World_Geodetic_System
