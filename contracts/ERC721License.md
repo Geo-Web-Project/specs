@@ -34,4 +34,4 @@ function setContent(uint256 tokenId, bytes ceramicDocId) external onlyTokenOwner
 function removeContent(uint256 tokenId) external onlyTokenOwner;
 ```
 
-**Note**: There are ongoing discussions with Ceramic about an NFT being an owner of a document. This may move the responsibility of setting content up a layer to Ceramic. Attaching a Ceramic doc may only be needed when minting the license for the first time and not also when the license changes owners, saving on gas. 
+**Note**: There are ongoing discussions with Ceramic about an NFT being an owner of a document. This may move the responsibility of setting content up a layer to Ceramic. Attaching a Ceramic doc may only be needed when minting the license for the first time and not also when the license changes owners, saving on gas.

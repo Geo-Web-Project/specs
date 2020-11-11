@@ -97,6 +97,7 @@ Earth is divided into a grid of `GeoWebCoordinate`. This grid is of size 2^24 (l
 See converting from GPS to GeoWebCoordinate [TODO].
 
 A `GeoWebCoordinate` is an unsigned 64-bit integer, where the most significant 32 bits are the X coordinate and the least significant 32 bits are the Y coordinate.
+
 ```
 <32 bits of X><32 bits of Y>
 
@@ -118,6 +119,7 @@ mapping(uint256 => LandParcel) landParcels;
 ```
 
 Each direction of a path is represented as two bits:
+
 ```
 00 -> North
 01 -> South
@@ -131,7 +133,7 @@ A single path element of length 256 bits can represent up to 64 paths while only
 
 The smart contract stores an index about which coordinates belong to existing parcels. This is used to ensure no parcels being minted overlap with existing parcels.
 
-At a minimum, the contract only needs to store a single bit for each coordinate, where `0` means the coordinate is available and `1` means it is not available. 
+At a minimum, the contract only needs to store a single bit for each coordinate, where `0` means the coordinate is available and `1` means it is not available.
 
 In order to efficiently pack these bits, the availability of 256 coordinates is packed into a single slot or EVM word. These words make up another coordinate system that divides the `GeoWebCoordinate` system into a grid of size (2^24 / 16) by (2^23 / 16). Each word in this grid maps to a nested grid of 16x16 `GeoWebCoordinate` for a total of 256 coordinates in each word.
 
@@ -184,6 +186,7 @@ This conversion is needed to lookup content that is associated with some GPS loc
 #### Step 1: Normalize GPS Coordinates
 
 The first step is to normalize a GPS coordinate. Given a GPS coordinate in degrees:
+
 - Latitude from -90.0 to 90.0
   - Add 90.0 to get a value between 0.0 and <180.0
 - Longitude from -180.0 to 180.0
@@ -192,6 +195,7 @@ The first step is to normalize a GPS coordinate. Given a GPS coordinate in degre
 #### Step 2a: Convert Latitude
 
 The latitude coordinate must be converted from a value between 0 and <180 to 0 and <2^23.
+
 ```
 Lat_GW = floor(Lat_GPS / (180 / 2^23))
 ```
@@ -199,6 +203,7 @@ Lat_GW = floor(Lat_GPS / (180 / 2^23))
 #### Step 2b: Convert Longitude
 
 The longitude coordinate must be converted from a value between 0 and <360 to 0 and <2^24.
+
 ```
 Lon_GW = floor(Lon_GPS / (360 / 2^24))
 ```
@@ -206,6 +211,7 @@ Lon_GW = floor(Lon_GPS / (360 / 2^24))
 #### Step 3: Combine
 
 The `Lat_GW` and `Lon_GW` can then be combined into a single 64-bit integer.
+
 ```
 (Lon_GW << 32) | Lat_GW
 ```
@@ -213,12 +219,13 @@ The `Lat_GW` and `Lon_GW` can then be combined into a single 64-bit integer.
 ### GeoWebCoordinate -> GPS Bounding Box
 
 Another common use case is converting a `GeoWebCoordinate` to a GPS bounding box.
-```
-Bottom_Left_Lon = (Lon_GW * (180 / 2^24)) - 180
-Bottom_Left_Lat = (Lat_GW * (90 / 2^23)) - 90
 
-Top_Right_Lon = Bottom_Left_Lon + (180 / 2^24)
-Top_Right_Lat = Bottom_Left_Lat + (90 / 2^23)
+```
+Bottom_Left_Lon = (Lon_GW * (360 / 2^24)) - 180
+Bottom_Left_Lat = (Lat_GW * (180 / 2^23)) - 90
+
+Top_Right_Lon = Bottom_Left_Lon + (360 / 2^24)
+Top_Right_Lat = Bottom_Left_Lat + (180 / 2^23)
 
 Bottom_Right_Lon = Top_Right_Lon
 Bottom_Right_Lat = Bottom_Left_Lat

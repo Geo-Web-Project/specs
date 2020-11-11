@@ -12,7 +12,7 @@ The `GeoWebAdmin` contract is the core administrative layer of the Geo Web and i
 The smart contract stores a small piece of state about each license that includes the value of the license the holder has set and the time at which the license will expire if no additional fees are paid.
 
 ```
-struct License {
+struct LicenseInfo {
     uint256 value
     uint256 expirationTimestamp
 }
@@ -28,7 +28,7 @@ The user needs to grant approval of the transfer of DAI to the contract.
 
 Claiming a license will mint a new land parcel, mint the corresponding license, and grant control to the claimant. The claimant also needs to set the initial value and pay an initial license fee.
 
-The contract must ensure that none of the geohashes in the land claim are currently part of another license that is not expired or currently in an auction. In addition, claims are only valid if:
+Claims are only valid if:
 
 - `initialValue` >= 10 DAI
 - Resulting expiration date is >= 1 year and <= 2 years
@@ -42,6 +42,7 @@ function claim(uint256 baseGeohash, Direction[] memory path, uint256 initialValu
 Since all licenses are always for sale, anyone may purchase an existing license at its set value. They must also set a new value and optionally pay additional license fees on top of the current remaining prepaid license fee balance.
 
 Purchases are only valid if:
+
 - New value >= 10 DAI
 - Resulting expiration date is >= 2 weeks and <= 2 years
 
@@ -56,6 +57,7 @@ function purchaseLicense(uint256 identifier, uint256 maxPurchasePrice, uint256 n
 Additional license fee payments can be made at any time. This will push out the expiration date according to the tax rate and current value.
 
 A license fee payment is valid if:
+
 - Resulting expiration date is >= 2 weeks and <= 2 years
 
 ```
@@ -67,8 +69,9 @@ function payLicenseFee(uint256 identifier, uint256 amount) public onlyLicenseHol
 The holder of a license can change the value at any time. This will adjust the expiration date accordingly. The license holder can also send an additional fee payment in the same transaction if needed.
 
 A change in value is valid if:
+
 - New value >= 10 DAI
-- Resulting expiration date is >= 2 weeks 
+- Resulting expiration date is >= 2 weeks
 
 The holder may choose to drop the value to an amount where the expiration date would go beyond 2 years. However, the expiration date will not be extended beyond 2 years and the holder will lose those fees that have already been paid.
 
