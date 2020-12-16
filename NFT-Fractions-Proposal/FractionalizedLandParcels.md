@@ -1,10 +1,6 @@
 # Fractionalized Land Parcels
 
-Fractionalized digital land parcels create the opportunity for collective/cooperative licensing of Geo Web land parcels and open up the market for (high-value) land parcels to a wider audience. We will implement this functionality in an ongoing integration with the [NIFTEX platform](https://landing.niftex.com/). 
-
-## Current Status
-
-Both the Geo Web and NIFTEX are early in the development of their respective platforms. This is an exploratory proposal and will necessarily evolve as the platforms mature and community requirements are identified.
+Fractionalized digital land parcels create the opportunity for collective/cooperative licensing of Geo Web land parcels and open up the market for (high-value) land parcels to a wider audience. We can implement this functionality in an ongoing integration with the [NIFTEX platform](https://landing.niftex.com/). 
 
 ## Use Cases
 
@@ -16,13 +12,21 @@ Collective licensing of digital land parcels is a primitive on which the Geo Web
 * DAOs
 * Generative content creation and placement
 
-## Integration
+## Current Status
+
+Both the Geo Web and NIFTEX are early in the development of their respective platforms. This is an exploratory proposal and will necessarily evolve as the platforms mature and community requirements are identified.
+
+## NIFTEX Integration Proposal
 
 ### Licensor View
+
+<img width="785" alt="Parcel Fractions - Owned Parcel" src="https://user-images.githubusercontent.com/15019279/102415591-ad0ef080-3fb5-11eb-8d12-775d6ef632f3.png">
 
 * In addition to the base “Edit” functionality, current licensors can initiate a “Fractionalize Parcel'' function. This is implemented as a native integration of NIFTEX on the Geo Web Cadastre.
 
 ### Fractionalize Function
+
+<img width="788" alt="Parcel Fractions - Fractionalizing Detail" src="https://user-images.githubusercontent.com/15019279/102415654-cca61900-3fb5-11eb-9505-4a52b2c99d5b.png">
 
 * Full explanation of the fractionalization process, fees, best practices, & FAQ is found under “How does this work?”
 * The Licensor enters the following required fields for fractionalizing their parcel:
@@ -41,12 +45,16 @@ Collective licensing of digital land parcels is a primitive on which the Geo Web
   * Is the NFT an artwork?
     * Geo Web = No
 
-### Fractionalize Parcel
+### Fractionalized Parcel View
+
+<img width="785" alt="Parcel Fractions - Fractionalized Parcel" src="https://user-images.githubusercontent.com/15019279/102415727-e8a9ba80-3fb5-11eb-91a6-800f03335d1c.png">
 
 * Once a parcel is fractionalized, the Parcel Detail View will look like the mockup shown above.
 * The Initiate Buyout function initiates a forced transfer of all outstanding shards by paying the For Sale Price (See Notes & Outstanding Items for additional information on the interaction between SALSA and NIFTEX’s Buyout Clause
 
-### Buying Shards
+### Buying Shards Function
+
+<img width="786" alt="Parcel Fractions - Buying Shards" src="https://user-images.githubusercontent.com/15019279/102415758-f52e1300-3fb5-11eb-9c96-94d84e7fdc62.png">
 
 * Any user can buy outstanding shards of a land parcel for the current price.
 * Proceeds from the sale and any “Additional Network Fee Payments” are first applied directly to extending the expiration date of the land parcel. Once the maximum of two years is reached, the remaining fees are applied to increasing the “For Sale Price” of the land parcel. For example:
