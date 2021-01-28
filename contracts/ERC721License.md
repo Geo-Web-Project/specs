@@ -22,14 +22,14 @@ The owner of a license is granted one simple permission: to attach content to a 
 
 This content is represented as a [Ceramic Document Identifier](https://github.com/ceramicnetwork/specs#document-identifiers), which is a CID.
 
-A CID is stored as a byte array of the following format:
+A CID is stored as a string of the following format:
 
 ```
 <cid-version><multicodec-content-type><multihash-content-address>
 ```
 
 ```
-function setContent(uint256 tokenId, bytes ceramicDocId) external onlyTokenOwner;
+function setContent(uint256 tokenId, string ceramicDocId) external onlyTokenOwner;
 
 function removeContent(uint256 tokenId) external onlyTokenOwner;
 ```
