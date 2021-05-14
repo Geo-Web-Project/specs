@@ -6,12 +6,14 @@ A **Media Gallery Item** is a JSON-LD representation of a [MediaObject](https://
 
 See schema.org [MediaObject](https://schema.org/MediaObject) for a full list of fields. The following table lists the most common fields relevant to the Geo Web.
 
-| Property         | Description                                                                 | Value      | Required | Example                               |
-| ---------------- | --------------------------------------------------------------------------- | ---------- | -------- | ------------------------------------- |
-| `@type`          | Used to set the data type of a node or typed value.                         | string     | required | 3DModel                               |
-| `name`           | The name of the item.                                                       | string     | optional | Astronaut                             |
-| `contentUrl`     | Actual bytes of the media object, for example the image file or video file. | URI string | optional | (ipfs://, ipns://, http://, https://) |
-| `encodingFormat` | Media type typically expressed using a MIME format                          | string     | optional | model/gltf-binary                     |
+| Property         | Description                                                                 | Value                | Required | Example                               |
+| ---------------- | --------------------------------------------------------------------------- | -------------------- | -------- | ------------------------------------- |
+| `@type`          | Used to set the data type of a node or typed value.                         | string               | required | 3DModel                               |
+| `name`           | The name of the item.                                                       | string               | optional | Astronaut                             |
+| `contentUrl`     | Actual bytes of the media object, for example the image file or video file. | URI string           | optional | (ipfs://, ipns://, http://, https://) |
+| `contentSize`    | File size in bytes.                                                         | string               | optional | 1024                                  |
+| `encodingFormat` | Media type typically expressed using a MIME format.                         | string               | optional | model/gltf-binary                     |
+| `encoding`       | A media object that encodes this MediaObject.                               | array of MediaObject | optional | [...]                                 |
 
 **Deployment:** `ceramic://kjzl6cwe1jw148ycjs9eijway3tyknr4pzuryabpw2wm8y6uokaxyd79d52i8yn`
 
@@ -28,16 +30,27 @@ See schema.org [MediaObject](https://schema.org/MediaObject) for a full list of 
     },
     "name": {
       "type": "string",
-      "description": "The name of the item"
+      "description": "The name of the item."
     },
     "contentUrl": {
       "type": "string",
       "format": "uri",
-      "description": "Actual bytes of the media object, for example the image file or video file"
+      "description": "Actual bytes of the media object, for example the image file or video file."
+    },
+    "contentSize": {
+      "type": "string",
+      "description": "File size in bytes."
     },
     "encodingFormat": {
       "type": "string",
-      "description": "Media type typically expressed using a MIME format"
+      "description": "Media type typically expressed using a MIME format."
+    },
+    "encoding": {
+      "type": "array",
+      "description": "A media object that encodes this MediaObject.",
+      "items": {
+        "$ref": "#"
+      }
     }
   }
 }
