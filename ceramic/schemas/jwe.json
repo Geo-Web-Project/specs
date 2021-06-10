@@ -1,0 +1,68 @@
+{
+  "type": "object",
+  "title": "JWE",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "required": [
+    "protected",
+    "iv",
+    "ciphertext",
+    "tag"
+  ],
+  "properties": {
+    "iv": {
+      "type": "string"
+    },
+    "aad": {
+      "type": "string"
+    },
+    "tag": {
+      "type": "string"
+    },
+    "protected": {
+      "type": "string"
+    },
+    "ciphertext": {
+      "type": "string"
+    },
+    "recipients": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "header",
+          "encrypted_key"
+        ],
+        "properties": {
+          "header": {
+            "type": "object",
+            "required": [
+              "alg",
+              "iv",
+              "tag"
+            ],
+            "properties": {
+              "iv": {
+                "type": "string"
+              },
+              "alg": {
+                "type": "string"
+              },
+              "epk": {
+                "type": "object"
+              },
+              "kid": {
+                "type": "string"
+              },
+              "tag": {
+                "type": "string"
+              }
+            }
+          },
+          "encrypted_key": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

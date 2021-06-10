@@ -2,9 +2,9 @@
 
 Index of schemas used in the Geo Web. Theses should be pinned.
 
-| Name                                            | StreamId                                                                    |
-| ----------------------------------------------- | --------------------------------------------------------------------------- |
-| JWE                                             | ceramic://k3y52l7qbv1fryohi5fiw2r9vfsmflxt185t0hg6yutaetsl6iqwxhmy74e1056gw |
-| [Parcel Content Root](./parcel-content-rood.md) | ceramic://kjzl6cwe1jw1472gwvijuu3mejkgniylrzpz54kgrzuqu8u6utnduxm7hhgtpn0   |
-| [Media Gallery](./media-gallery.md)             | ceramic://kjzl6cwe1jw1483jn4rtotafswobwy0qm25q7hmgpjenf9mbrqdpfsfqiodtayv   |
-| [Media Gallery Item](./media-gallery-item.md)   | ceramic://kjzl6cwe1jw148ycjs9eijway3tyknr4pzuryabpw2wm8y6uokaxyd79d52i8yn   |
+| Name                                            | StreamId                                                                  |
+| ----------------------------------------------- | ------------------------------------------------------------------------- |
+| JWE                                             | ceramic://kjzl6cwe1jw149tvwboelr13z78ha14rcirvkm7g9b6218ckvxefa52xvyp0jir |
+| [Parcel Content Root](./parcel-content-rood.md) | ceramic://kjzl6cwe1jw145enke6is8c7osi0kd4v44lamz4bvyw3tb0rbugfdkfp7k5073l |
+| [Media Gallery](./media-gallery.md)             | ceramic://kjzl6cwe1jw145uah0u9by4osi7mx64xmpcj0sylxj812k1xwlkpta198s6tohc |
+| [Media Gallery Item](./media-gallery-item.md)   | ceramic://kjzl6cwe1jw14bhegtp3sle326kwwo1f2t5f3esvnmel6nhxvowdnsrfux2zvxu |

@@ -15,8 +15,6 @@ See schema.org [MediaObject](https://schema.org/MediaObject) for a full list of 
 | `encodingFormat` | Media type typically expressed using a MIME format.                         | string               | optional | model/gltf-binary                     |
 | `encoding`       | A media object that encodes this MediaObject.                               | array of MediaObject | optional | [...]                                 |
 
-**Deployment:** `ceramic://kjzl6cwe1jw148ycjs9eijway3tyknr4pzuryabpw2wm8y6uokaxyd79d52i8yn`
-
 ```json
 {
   "$schema": "http://json-schema.org/draft-07/schema#",

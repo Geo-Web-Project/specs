@@ -10,8 +10,6 @@ The **Parcel Content Root** is the root document tied to a Geo Web Parcel.
 | `webContent`   | URI pointing to some web content                                     | URI string   | 150 char | optional | (ipfs://, ipns://, http://, https://)                           |
 | `mediaGallery` | An ordered collection of [MediaGalleryItem](./media-gallery-item.md) | docId string | 150 char | optional | kjzl6cwe1jw1483jn4rtotafswobwy0qm25q7hmgpjenf9mbrqdpfsfqiodtayv |
 
-**Deployment:** `ceramic://kjzl6cwe1jw1472gwvijuu3mejkgniylrzpz54kgrzuqu8u6utnduxm7hhgtpn0`
-
 ```json
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
@@ -29,11 +27,7 @@ The **Parcel Content Root** is the root document tied to a Geo Web Parcel.
     },
     "mediaGallery": {
       "type": "string",
-      "maxLength": 150,
-      "$ceramic": {
-        "type": "tile",
-        "schema": "kjzl6cwe1jw1483jn4rtotafswobwy0qm25q7hmgpjenf9mbrqdpfsfqiodtayv"
-      }
+      "maxLength": 150
     }
   }
 }
