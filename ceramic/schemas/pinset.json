@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Pinset",
+    "description": "A simple schema for storing a CID that represents the root of a pinset",
+    "type": "object",
+    "definitions": {
+        "IPFSUrl": {
+            "type": "string",
+            "pattern": "^ipfs://.+",
+            "maxLength": 150
+        }
+    },
+    "properties": {
+        "root": {
+            "$ref": "#/definitions/IPFSUrl"
+        }
+    },
+    "required": [
+        "root"
+    ]
+}
