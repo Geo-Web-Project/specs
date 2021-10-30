@@ -24,7 +24,7 @@ See schema.org [MediaObject](https://schema.org/MediaObject) for a full list of 
     "@type": {
       "description": "Used to set the data type of a node or typed value.",
       "type": "string",
-      "enum": ["3DModel"]
+      "enum": [ "3DModel", "ImageObject", "VideoObject", "AudioObject"]
     },
     "name": {
       "type": "string",
