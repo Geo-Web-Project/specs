@@ -8,10 +8,15 @@ A **Media Gallery** is an ordered collection of [MediaGalleryItem](./media-galle
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "MediaGallery",
-  "type": "array",
-  "items": {
-    "type": "string",
-    "maxLength": 150
+  "type": "object",
+  "properties": {
+    "mediaGalleryItems": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 150
+      }
+    }
   }
 }
 ```
