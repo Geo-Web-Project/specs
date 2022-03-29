@@ -10,7 +10,8 @@
                 "3DModel",
                 "ImageObject",
                 "VideoObject",
-                "AudioObject"
+                "AudioObject",
+                "WebObject"
             ]
         },
         "name": {
@@ -36,6 +37,20 @@
             "items": {
                 "$ref": "#"
             }
+        },
+        "metadata": {
+            "type": "object",
+            "description": "An object that contains the Metadata associated.",
+            "default": {},
+            "examples": [
+                {
+                    "scale": "1,1,1",
+                    "color": "#ff0000,#00ff00,#0000ff",
+                    "position": "1,1,1"
+                }
+            ],
+            "required": [],
+            "additionalProperties": true
         }
     }
 }

@@ -7,11 +7,6 @@
             "type": "string",
             "maxLength": 150
         },
-        "webContent": {
-            "type": "string",
-            "format": "uri",
-            "maxLength": 150
-        },
         "mediaGallery": {
             "type": "string",
             "maxLength": 150
