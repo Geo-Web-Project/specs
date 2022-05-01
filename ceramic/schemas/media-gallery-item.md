@@ -14,6 +14,7 @@ See schema.org [MediaObject](https://schema.org/MediaObject) for a full list of 
 | `contentSize`    | File size in bytes.                                                         | string               | optional | 1024                                  |
 | `encodingFormat` | Media type typically expressed using a MIME format.                         | string               | optional | model/gltf-binary                     |
 | `encoding`       | A media object that encodes this MediaObject.                               | array of MediaObject | optional | [...]                                 |
+| `metadata`       | Metadata object attributes of this MediaObject.                               | array of Metadata Object | optional | ["scale": "1,1,1", "color": "#ff0000,#00ff00,#0000ff", "position": "1,1,1"]                                 |
 
 ```json
 {
@@ -49,6 +50,13 @@ See schema.org [MediaObject](https://schema.org/MediaObject) for a full list of 
       "items": {
         "$ref": "#"
       }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "An object that contains the Metadata associated.",
+      "default": {},
+      "required": [],
+      "additionalProperties": true
     }
   }
 }
