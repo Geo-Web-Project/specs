@@ -51,7 +51,7 @@ See schema.org [MediaObject](https://schema.org/MediaObject) for a full list of 
         "$ref": "#"
       }
     },
-    "metadata": {
+    "attributes": {
       "type": "object",
       "description": "An object that contains the Metadata associated.",
       "default": {},

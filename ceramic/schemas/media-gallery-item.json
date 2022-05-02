@@ -38,9 +38,9 @@
                 "$ref": "#"
             }
         },
-        "metadata": {
+        "attributes": {
             "type": "object",
-            "description": "An object that contains the Metadata associated.",
+            "description": "An object that contains the Metadata attributes associated.",
             "default": {},
             "examples": [
                 {
